@@ -16,10 +16,10 @@ function Card (card) {
   );
 }
 
-const bright = ":card-type/bright";
-const animal = ":card-type/animal";
-const ribbon = ":card-type/ribbon";
-const junk = ":card-type/junk";
+const bright = "Bright";
+const animal = "Animal";
+const ribbon = "Ribbon";
+const junk = "Junk";
 
 const types = [bright, animal, ribbon, junk];
 
@@ -65,6 +65,15 @@ const cardComparator = organize => (a, b) => {
     return diff;
 };
 
+const GroupLabel = ({ type,  group, count }) => {
+  if (type === "Month") {
+    const month = cards.find(c => c.month === group);
+    return (<div className="Card-label"> {month.month}: <i>{month.plant}</i> ({count})</div>);
+  } else if (type === "Type") {
+    return (<div className="Card-label"> {group}  ({count})</div>);
+  }
+}
+
 function App() {
   const [filters, setFilters] = useState([]);
   const [organize, setOrganize] = useState('Month');
@@ -74,30 +83,32 @@ function App() {
       <Filters filters={filters} setFilters={setFilters} />
       <Organize organize={organize} setOrganize={setOrganize} />
 
-      {pipe(
-        map(({ month, plant, types }) =>
-          addIndex(map) ((type, index) => ({ month, plant, type, index })) (types)
-        ),
-        flatten,
-        filter(cardMatchesFilters(filters)),
-        sort(cardComparator(organize)),
-        groupBy(card => card[organize.toLowerCase()]),
+      <div className="Cards">
+        {pipe(
+          map(({ month, plant, types }) =>
+            addIndex(map) ((type, index) => ({ month, plant, type, index })) (types)
+          ),
+          flatten,
+          filter(cardMatchesFilters(filters)),
+          sort(cardComparator(organize)),
+          groupBy(card => card[organize.toLowerCase()]),
 
-        map(map(card => (
-          <Card
-            key={`${card.month} ${card.type} ${card.index}`}
-            month={card.month} plant={card.plant} type={card.type} index={card.index} />
-        ))),
+          map(map(card => (
+            <Card
+              key={`${card.month} ${card.type} ${card.index}`}
+              month={card.month} plant={card.plant} type={card.type} index={card.index} />
+          ))),
 
-        mapObjIndexed((cards, group) => (
-          <div key={group}>
-            <div>{group}</div>
-            <div>{cards}</div>
-          </div>
-        )),
+          mapObjIndexed((cards, group) => (
+            <div key={group} className="Card-group">
+              <GroupLabel type={organize} group={group} count={cards.length} />
+              <div>{cards}</div>
+            </div>
+          )),
 
-        Object.values
-      ) (cards)}
+          Object.values
+        ) (cards)}
+      </div>
     </div>
   );
 }
@@ -137,12 +148,12 @@ const Filters = ({ filters, setFilters }) => {
         Bright
       </label>
       <label>
-        <input type="checkbox" checked={isChecked(ribbon)} onChange={change(ribbon)} />
-        Ribbon
-      </label>
-      <label>
         <input type="checkbox" checked={isChecked(animal)} onChange={change(animal)} />
         Animal
+      </label>
+      <label>
+        <input type="checkbox" checked={isChecked(ribbon)} onChange={change(ribbon)} />
+        Ribbon
       </label>
       <label>
         <input type="checkbox" checked={isChecked(junk)} onChange={change(junk)} />

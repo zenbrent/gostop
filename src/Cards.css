@@ -23,6 +23,16 @@
   height: 246px;
 }
 
+.Card-group {
+  display: inline-block;
+  margin-right: 1em;
+}
+
+.Card-label {
+  display: block;
+  text-align: left;
+}
+
 
 .Card-image-0-0 { background-image: url("./cards/0/0.png"); }
 .Card-image-0-1 { background-image: url("./cards/0/1.png"); }
