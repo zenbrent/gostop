@@ -1,45 +1,40 @@
 import React, { useState } from 'react';
-import { mapObjIndexed, addIndex, findIndex, pipe, map, flatten, sort, filter, groupBy } from 'ramda';
+import { uniq, mapObjIndexed, pipe, map, sort, filter, groupBy } from 'ramda';
+import styled from 'styled-components';
+
+import {
+  bright,
+  animal,
+  ribbon,
+  junk,
+  types,
+  allCards,
+  cardsByMonth,
+  monthIndex,
+  typeIndex,
+} from './cards';
+
+import {
+  combinations
+} from './Sets';
 
 import './App.css';
 import './Cards.css';
 
-const monthIndex = ({ month }) => findIndex(c => c.month === month) (cards);
-const typeIndex = ({ type }) => findIndex(t => t === type) (types);
+const Card = styled.div`
+  display: inline-block;
+  margin: 2px;
 
-function Card (card) {
-  const { /* month, plant, type, */ index } = card;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  border-radius: 3px;
 
-  return (
-    <div className={`Card Card-medium Card-image-${monthIndex(card)}-${index}`}>
-    </div>
-  );
-}
+  width: ${p => p.size || 100}px;
+  height: ${p => p.size ? 1.64 * p.size : 164}px;
 
-const bright = "Bright";
-const animal = "Animal";
-const ribbon = "Ribbon";
-const junk = "Junk";
-
-const types = [bright, animal, ribbon, junk];
-
-const cards = [
-  { month: "January", plant: "Pine", types: [bright, ribbon, junk, junk] },
-  { month: "February", plant: "Plum", types: [animal, ribbon, junk, junk] },
-  { month: "March", plant: "Cherry", types: [bright, ribbon, junk, junk] },
-
-  { month: "April", plant: "Wisteria", types: [animal, ribbon, junk, junk] },
-  { month: "May", plant: "Iris", types: [animal, ribbon, junk, junk] },
-  { month: "June", plant: "Peony", types: [animal, ribbon, junk, junk] },
-
-  { month: "July", plant: "Blush Clover", types: [animal, ribbon, junk, junk] },
-  { month: "August", plant: "Pampas Grass", types: [bright, animal, junk, junk] },
-  { month: "September", plant: "Chrysanthemum", types: [animal, ribbon, junk, junk] },
-
-  { month: "October", plant: "Maple", types: [animal, ribbon, junk, junk] },
-  { month: "November", plant: "Paulownia", types: [bright, junk, junk, junk] },
-  { month: "December", plant: "Willow", types: [bright, animal, ribbon, junk] }
-];
+  background-image: url("./cards/${p => monthIndex(p.card)}/${p => p.card.index}.png"); 
+`;
 
 const cardMatchesFilters = filters => card => {
   if (filters.length === 0)
@@ -59,15 +54,14 @@ const cardComparator = organize => (a, b) => {
   else if (organize === "Type")
     diff = typeIndex(a) - typeIndex(b);
 
-  if (diff === 0)
-    return a.index - b.index;
-  else
-    return diff;
+  return diff !== 0
+    ? diff
+    : a.index - b.index;
 };
 
 const GroupLabel = ({ type,  group, count }) => {
   if (type === "Month") {
-    const month = cards.find(c => c.month === group);
+    const month = cardsByMonth.find(c => c.month === group);
     return (<div className="Card-label"> {month.month}: <i>{month.plant}</i> ({count})</div>);
   } else if (type === "Type") {
     return (<div className="Card-label"> {group}  ({count})</div>);
@@ -75,28 +69,149 @@ const GroupLabel = ({ type,  group, count }) => {
 }
 
 function App() {
+  const [listType, setListType] = useState("combinations");
   const [filters, setFilters] = useState([]);
-  const [organize, setOrganize] = useState('Month');
+  const [organize, setOrganize] = useState("Month");
 
   return (
     <div className="App">
+      <div>
+        <label>
+          <input type="radio" name="listType" checked={listType === "cards"} value="cards" onChange={e => setListType(e.target.value)} />
+          Cards
+        </label>
+        <label>
+          <input type="radio" name="listType" checked={listType === "combinations"} value="combinations" onChange={e => setListType(e.target.value)} />
+          Combinations
+        </label>
+      </div>
+      {listType === "combinations"
+        ? <Combinations />
+        : <CardList {...{ filters, setFilters, organize, setOrganize }} />}
+    </div>
+  );
+}
+
+const cardKey = card => `${card.month} ${card.type} ${card.index}`;
+
+const Combination = styled.div`
+  display: inline-block;
+  padding: 0 1em;
+  border: solid hotpink 1px;
+`;
+
+const CombinationCards = ({ cards }) => (
+  cards.map(card =>
+    <Card card={card} key={cardKey(card)} />
+  )
+);
+
+const CardInstructions = styled.div`
+  display: block;
+`;
+
+const ComboTitle = styled.div`
+  margin-top: 1em;
+  font-weight: bold;
+`;
+
+function Combinations () {
+  return combinations.map(combination => {
+    const {
+      name,
+      pool: _pool = [],
+      count,
+      min,
+      requires = [],
+      excludes = [],
+      sets = [],
+      notes
+    } = combination;
+
+    const pool = uniq(
+      _pool
+      .filter(x => !requires.includes(x))
+      .filter(x => !excludes.includes(x))
+    );
+
+    return (
+      <div>
+        <ComboTitle>
+          {name}
+        </ComboTitle>
+        {notes &&
+          <div>
+            Note: {notes}
+          </div>
+        }
+        {when(requires, () => (
+          <Combination>
+            <CardInstructions>
+              the following cards
+            </CardInstructions>
+            <CombinationCards cards={requires} />
+          </Combination>
+        ))}
+        {when(pool, () => (
+          <Combination>
+            <CardInstructions>
+              {when(requires, () => "and")}
+              {!min && !!pool.length && count && (count < pool.length + requires.length
+                ? ` any ${count - requires.length} of the following cards: `
+                : " all of the following cards: ")}
+              {pool && min && ` at least ${min} of the following cards: `}
+            </CardInstructions>
+            <CombinationCards cards={pool.filter(c => !excludes.includes(c))} />
+          </Combination>
+        ))}
+        {when(excludes, () => (
+          <Combination>
+            <CardInstructions>
+              not
+            </CardInstructions>
+            <CombinationCards cards={excludes} />
+          </Combination>
+        ))}
+        {when(sets, () => (
+          <Combination>
+            <CardInstructions>
+              {sets.length === 1 && "All cards in this set:"}
+              {sets.length > 1 && "Any one of these sets:"}
+            </CardInstructions>
+            {map(set => (
+              <div>
+                <CombinationCards cards={set} />
+              </div>
+            )) (sets)}
+          </Combination>
+        ))}
+      </div>
+    );
+  });
+}
+
+const Cards = styled.div`
+  text-align: left;
+  margin: 0 auto;
+  display: block;
+  max-width: 90%;
+  text-align: center;
+`;
+
+function CardList ({ filters, setFilters, organize, setOrganize }) {
+  return (
+    <>
       <Filters filters={filters} setFilters={setFilters} />
       <Organize organize={organize} setOrganize={setOrganize} />
 
-      <div className="Cards">
+      <Cards>
         {pipe(
-          map(({ month, plant, types }) =>
-            addIndex(map) ((type, index) => ({ month, plant, type, index })) (types)
-          ),
-          flatten,
           filter(cardMatchesFilters(filters)),
           sort(cardComparator(organize)),
           groupBy(card => card[organize.toLowerCase()]),
 
           map(map(card => (
-            <Card
-              key={`${card.month} ${card.type} ${card.index}`}
-              month={card.month} plant={card.plant} type={card.type} index={card.index} />
+            <Card card={card} key={cardKey(card)} />
           ))),
 
           mapObjIndexed((cards, group) => (
@@ -107,11 +222,12 @@ function App() {
           )),
 
           Object.values
-        ) (cards)}
-      </div>
-    </div>
+        ) (allCards)}
+      </Cards>
+    </>
   );
 }
+
 
 const Organize = ({ organize, setOrganize }) => {
   return (
@@ -129,18 +245,20 @@ const Organize = ({ organize, setOrganize }) => {
 };
 
 const Filters = ({ filters, setFilters }) => {
-  const isChecked = name => filters.includes(name);
+  const isAll = filters.length === types.length;
+  const isChecked = name => isAll || filters.includes(name);
   const change = name => e => {
     if (e.target.checked)
       setFilters([name, ...filters]);
-    else
+    else {
       setFilters(filters.filter(f => f !== name));
+    }
   };
 
   return (
     <div>
       <label>
-        <input type="checkbox" checked={filters.length === 0} onChange={e => e.target.checked ? setFilters([]) : setFilters([bright])} />
+        <input type="checkbox" checked={isAll} onChange={e => e.target.checked ? setFilters(types) : setFilters([bright])} />
         All
       </label>
       <label>
@@ -164,3 +282,8 @@ const Filters = ({ filters, setFilters }) => {
 };
 
 export default App;
+
+function when (xs, cb) {
+  if (xs.length)
+    return cb();
+}
