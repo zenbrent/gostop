@@ -35,7 +35,7 @@ const Header = styled.div`
 `;
 
 const Router = window.location.host.endsWith('github.io')
-  ? (props) => <HashRouter basename='/gostop' {...props} />
+  ? HashRouter
   : BrowserRouter;
 
 function App() {
