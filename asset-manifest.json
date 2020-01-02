@@ -1,14 +1,14 @@
 {
   "files": {
     "main.css": "/gostop/static/css/main.5ecd60fb.chunk.css",
-    "main.js": "/gostop/static/js/main.f7141475.chunk.js",
-    "main.js.map": "/gostop/static/js/main.f7141475.chunk.js.map",
+    "main.js": "/gostop/static/js/main.bda1de92.chunk.js",
+    "main.js.map": "/gostop/static/js/main.bda1de92.chunk.js.map",
     "runtime-main.js": "/gostop/static/js/runtime-main.98c34789.js",
     "runtime-main.js.map": "/gostop/static/js/runtime-main.98c34789.js.map",
     "static/js/2.6e87cd8b.chunk.js": "/gostop/static/js/2.6e87cd8b.chunk.js",
     "static/js/2.6e87cd8b.chunk.js.map": "/gostop/static/js/2.6e87cd8b.chunk.js.map",
     "index.html": "/gostop/index.html",
-    "precache-manifest.304e24834dc5b395aadd797f260466c1.js": "/gostop/precache-manifest.304e24834dc5b395aadd797f260466c1.js",
+    "precache-manifest.4f1dfd946d112b8fef7dec99aa4551d1.js": "/gostop/precache-manifest.4f1dfd946d112b8fef7dec99aa4551d1.js",
     "service-worker.js": "/gostop/service-worker.js",
     "static/css/main.5ecd60fb.chunk.css.map": "/gostop/static/css/main.5ecd60fb.chunk.css.map",
     "static/js/2.6e87cd8b.chunk.js.LICENSE": "/gostop/static/js/2.6e87cd8b.chunk.js.LICENSE"
@@ -17,6 +17,6 @@
     "static/js/runtime-main.98c34789.js",
     "static/js/2.6e87cd8b.chunk.js",
     "static/css/main.5ecd60fb.chunk.css",
-    "static/js/main.f7141475.chunk.js"
+    "static/js/main.bda1de92.chunk.js"
   ]
 }
