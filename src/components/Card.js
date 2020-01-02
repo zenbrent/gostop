@@ -20,7 +20,7 @@ export const Card = styled.img.attrs(p => ({
   background-size: cover;
   border-radius: 3px;
 
-  cursor: pointer;
+  cursor: ${p => p.onClick ? 'pointer' : 'default'};
 
   @media (min-width: 376px) {
     width: ${p => p.width || 'calc(30px + 4vw)'};

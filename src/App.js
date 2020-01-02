@@ -56,12 +56,46 @@ const Footer = styled.div`
   align-self: center;
 `;
 
-const ZoomCard = styled(Card).attrs({
-  width: 'calc(100% - 2rem)'
-})`
+const ZoomCardContainer = styled.div`
   grid-area: zoom;
   margin: 0 auto;
+  width: calc(100% - 2rem);
 `;
+
+const ZoomCardInfo = styled.div`
+  display: block;
+`;
+
+const CloseButton = styled.div`
+  &:after {
+    content: '[close]';
+    float: right;
+    font-size: small;
+    font-weight: 100;
+    height: 1rem;
+    line-height: 1rem;
+    color: rgba(0, 0, 0, 0.5);
+    cursor: pointer;
+  }
+  &:hover:after {
+    color: deeppink;
+  }
+`;
+
+const ZoomCard = ({ card, closeCard }) => {
+  if (!card)
+    return null;
+
+  return (
+    <ZoomCardContainer>
+      <CloseButton onClick={closeCard} />
+      <Card card={card} width='100%' />
+      <ZoomCardInfo>{card.month}</ZoomCardInfo>
+      <ZoomCardInfo>{card.plant}</ZoomCardInfo>
+      <ZoomCardInfo>{card.type}</ZoomCardInfo>
+    </ZoomCardContainer>
+  );
+}
 
 const Router = window.location.host.endsWith('github.io')
   ? HashRouter
@@ -103,7 +137,7 @@ function App() {
           </Route>
         </Switch>
 
-        {!zoomedCard ? '' : <ZoomCard card={zoomedCard} />}
+        <ZoomCard card={zoomedCard} closeCard={() => zoomCard()} />
 
         <Footer />
       </AppContainer>
