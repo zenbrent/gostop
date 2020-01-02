@@ -3,6 +3,7 @@ import styled from 'styled-components';
 
 import { Combinations } from './pages/Combinations/combinations';
 import { CardList } from './pages/CardList/cardList';
+import { Licenses } from './pages/Licensing/licensing';
 import { Card } from './components/Card';
 
 import {
@@ -49,6 +50,12 @@ const Header = styled.div`
   align-self: center;
 `;
 
+const Footer = styled.div`
+  grid-area: footer;
+  justify-self: center;
+  align-self: center;
+`;
+
 const ZoomCard = styled(Card)`
   grid-area: zoom;
   width: calc(100% - 2rem);
@@ -58,6 +65,12 @@ const ZoomCard = styled(Card)`
 const Router = window.location.host.endsWith('github.io')
   ? HashRouter
   : BrowserRouter;
+
+const ToDo = styled.div`
+  &:hover:after {
+    content: "TODO";
+  }
+`;
 
 function App() {
   const [filters, setFilters] = useState([]);
@@ -74,11 +87,15 @@ function App() {
         <Links>
           <Link to="/">Cards</Link><br />
           <Link to="/combinations">Combinations</Link>
+          <ToDo>Serving</ToDo>
         </Links>
 
         <Switch>
           <Route path="/combinations">
             <Combinations zoomCard={zoomCard} />
+          </Route>
+          <Route path="/licenses">
+            <Licenses />
           </Route>
           <Route path="/">
             <CardList {...{ filters, setFilters, organize, setOrganize, zoomCard }} />
@@ -86,6 +103,8 @@ function App() {
         </Switch>
 
         {!zoomedCard ? '' : <ZoomCard card={zoomedCard} />}
+
+        <Footer />
       </AppContainer>
     </Router>
   );
