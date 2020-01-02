@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { Combinations } from './pages/Combinations/combinations';
 import { CardList } from './pages/CardList/cardList';
 import { Licenses } from './pages/Licensing/licensing';
+import { Serving } from './pages/Serving/serving';
 import { Card } from './components/Card';
 import { responsive, hideable } from './Theme';
 
@@ -44,6 +45,10 @@ const Links = styled.div`
   grid-area: nav;
   margin: 1rem;
   margin-top: 0;
+`;
+
+const NavLink = styled(Link)`
+  display: block;
 `;
 
 const Header = styled.div`
@@ -129,11 +134,11 @@ const Router = window.location.host.endsWith('github.io')
   ? HashRouter
   : BrowserRouter;
 
-const ToDo = styled.div`
-  &:hover:after {
-    content: "TODO";
-  }
-`;
+// const ToDo = styled.div`
+//   &:hover:after {
+//     content: "TODO";
+//   }
+// `;
 
 function App() {
   const [filters, setFilters] = useState([]);
@@ -148,12 +153,15 @@ function App() {
         </Header>
 
         <Links>
-          <Link to="/">Cards</Link><br />
-          <Link to="/combinations">Combinations</Link>
-          <ToDo>Serving</ToDo>
+          <NavLink to="/">Cards</NavLink>
+          <NavLink to="/combinations">Combinations</NavLink>
+          <NavLink to="/serving">Serving</NavLink>
         </Links>
 
         <Switch>
+          <Route path="/serving">
+            <Serving />
+          </Route>
           <Route path="/combinations">
             <Combinations zoomCard={zoomCard} />
           </Route>
