@@ -33,12 +33,16 @@ const Header = styled.div`
   align-self: center;
 `;
 
+const basename = window.location.host.endsWith('github.io')
+  ? '/gostop'
+  : '/';
+
 function App() {
   const [filters, setFilters] = useState([]);
   const [organize, setOrganize] = useState("Month");
 
   return (
-    <Router>
+    <Router basename={basename}>
       <AppContainer>
         <Header>
           Go Stop
