@@ -1,12 +1,15 @@
-// import React from 'react';
 import styled from 'styled-components';
+import './Card.css';
 
 import { monthIndex, } from '../cards';
 
-export const Card = styled.div`
+export const Card = styled.img.attrs(p => ({
+  className: `Card-image-${monthIndex(p.card)}-${p.card.index}`,
+  src: "data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAACkCAQAAADLA0NrAAAAmUlEQVR42u3PAQEAAAgCoPx/uh8KD8iViIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIyHbkAQJkAKVTKMc5AAAAAElFTkSuQmCC"
+}))`
   display: inline-block;
   position: relative;
-  margin: 2px;
+  margin-right: 2px;
 
   background-repeat: no-repeat;
   background-position: center;
