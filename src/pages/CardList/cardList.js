@@ -1,37 +1,42 @@
 import React from 'react';
 import styled from 'styled-components';
 import { mapObjIndexed, pipe, map, sort, filter, groupBy } from 'ramda';
-import {
-  bright,
-  animal,
-  ribbon,
-  junk,
-  types,
-  allCards,
-  cardsByMonth,
-  monthIndex,
-  typeIndex,
-} from '../../cards';
+import { bright, animal, ribbon, junk, types, allCards, cardsByMonth, monthIndex, typeIndex } from '../../cards';
 
-import { Card } from '../../components/Card';
+import { Card, cardKey } from '../../components/Card';
 
-const cardKey = card => `${card.month} ${card.type} ${card.index}`;
+const Controls = styled.div`
+  grid-area: controls;
 
-const Cards = styled.div`
-  text-align: left;
-  margin: 0 auto;
-  display: block;
-  max-width: 90%;
+  margin: 1rem;
+  margin-top: 0;
+`;
+
+const CardPage = styled.div`
+  grid-area: page;
   text-align: center;
 `;
+
+const CardGroup = styled.div`
+  display: inline-block;
+  margin-right: 1em;
+`;
+
+const CardLabel = styled.div`
+  display: block;
+  text-align: left;
+`;
+
 
 export function CardList ({ filters, setFilters, organize, setOrganize }) {
   return (
     <>
-      <Filters filters={filters} setFilters={setFilters} />
-      <Organize organize={organize} setOrganize={setOrganize} />
+      <Controls>
+        <Filters filters={filters} setFilters={setFilters} />
+        <Organize organize={organize} setOrganize={setOrganize} />
+      </Controls>
 
-      <Cards>
+      <CardPage>
         {pipe(
           filter(cardMatchesFilters(filters)),
           sort(cardComparator(organize)),
@@ -42,33 +47,26 @@ export function CardList ({ filters, setFilters, organize, setOrganize }) {
           ))),
 
           mapObjIndexed((cards, group) => (
-            <div key={group} className="Card-group">
+            <CardGroup key={group}>
               <GroupLabel type={organize} group={group} count={cards.length} />
               <div>{cards}</div>
-            </div>
+            </CardGroup>
           )),
 
           Object.values
         ) (allCards)}
-      </Cards>
+      </CardPage>
     </>
   );
 }
 
-const Organize = ({ organize, setOrganize }) => {
-  return (
-    <div>
-      <label>
-        <input type="checkbox" checked={organize === "Month"} onChange={e => setOrganize("Month")} />
-        Month
-      </label>
-      <label>
-        <input type="checkbox" checked={organize === "Type"} onChange={e => setOrganize("Type")} />
-        Type
-      </label>
-    </div>
-  );
-};
+const FilterLabel = styled.label`
+  display: block;
+`;
+
+const ControlGroup = styled.div`
+  margin-bottom: 1rem;
+`;
 
 const Filters = ({ filters, setFilters }) => {
   const isAll = filters.length === types.length;
@@ -81,31 +79,46 @@ const Filters = ({ filters, setFilters }) => {
     }
   };
 
+  const FilterInput = ({ prop, children }) => (
+    <FilterLabel>
+      <input type="checkbox" checked={isChecked(prop)} onChange={change(prop)} />
+      {children}
+    </FilterLabel>
+  );
+
   return (
-    <div>
-      <label>
+    <ControlGroup>
+      Filter card types:
+      <FilterLabel>
         <input type="checkbox" checked={isAll} onChange={e => e.target.checked ? setFilters(types) : setFilters([bright])} />
         All
-      </label>
-      <label>
-        <input type="checkbox" checked={isChecked(bright)} onChange={change(bright)} />
-        Bright
-      </label>
-      <label>
-        <input type="checkbox" checked={isChecked(animal)} onChange={change(animal)} />
-        Animal
-      </label>
-      <label>
-        <input type="checkbox" checked={isChecked(ribbon)} onChange={change(ribbon)} />
-        Ribbon
-      </label>
-      <label>
-        <input type="checkbox" checked={isChecked(junk)} onChange={change(junk)} />
-        Junk
-      </label>
-    </div>
+      </FilterLabel>
+      <FilterInput prop={bright}>Bright</FilterInput>
+      <FilterInput prop={animal}>Animal</FilterInput>
+      <FilterInput prop={ribbon}>Ribbon</FilterInput>
+      <FilterInput prop={junk}>Junk</FilterInput>
+    </ControlGroup>
   );
 };
+
+
+const Organize = ({ organize, setOrganize }) => {
+  return (
+    <ControlGroup>
+      Group by:
+      <FilterLabel>
+        <input type="radio" name="organize" checked={organize === "Month"} onChange={e => setOrganize("Month")} />
+        Month
+      </FilterLabel>
+      <FilterLabel>
+        <input type="radio" name="organize" checked={organize === "Type"} onChange={e => setOrganize("Type")} />
+        Type
+      </FilterLabel>
+    </ControlGroup>
+  );
+};
+
+
 
 const cardMatchesFilters = filters => card => {
   if (filters.length === 0)
@@ -131,11 +144,19 @@ const cardComparator = organize => (a, b) => {
 };
 
 const GroupLabel = ({ type,  group, count }) => {
-  if (type === "Month") {
-    const month = cardsByMonth.find(c => c.month === group);
-    return (<div className="Card-label"> {month.month}: <i>{month.plant}</i> ({count})</div>);
-  } else if (type === "Type") {
-    return (<div className="Card-label"> {group}  ({count})</div>);
-  }
+  const Contents = () => {
+    if (type === "Month") {
+      const month = cardsByMonth.find(c => c.month === group);
+      return <> {month.month}: <i>{month.plant}</i></>;
+    } else if (type === "Type") {
+      return <> {group} </>;
+    }
+  };
+
+  return (
+    <CardLabel>
+      <Contents /> ({count})
+    </CardLabel>
+  );
 }
 

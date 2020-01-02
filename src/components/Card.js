@@ -3,8 +3,6 @@ import styled from 'styled-components';
 
 import { monthIndex, } from '../cards';
 
-import '../Cards.css';
-
 export const Card = styled.div`
   display: inline-block;
   margin: 2px;

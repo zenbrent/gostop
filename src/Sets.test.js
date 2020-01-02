@@ -1,6 +1,5 @@
 import { combinations, matchesCombination } from './Sets';
-
-import {allCards, cardsByType, specialCards, animal, bright } from './cards';
+import { allCards, cardsByType, specialCards, animal, bright } from './cards';
 
 const brightCards = allCards.filter(c => c.type === bright);
 const animalCards = allCards.filter(c => c.type === animal);
