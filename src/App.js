@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import styled from 'styled-components';
 
 import { Combinations } from './pages/Combinations/combinations';
 import { CardList } from './pages/CardList/cardList';
 import { Licenses } from './pages/Licensing/licensing';
 import { Card } from './components/Card';
-import { responsive } from './Theme';
+import { responsive, hideable } from './Theme';
 
 import {
   HashRouter,
@@ -66,6 +66,7 @@ const ZoomCardContainer = styled.div`
 
 const ZoomCardInfo = styled.div`
   display: block;
+  ${hideable}
 `;
 
 const CloseButton = styled.div`
@@ -84,18 +85,42 @@ const CloseButton = styled.div`
   }
 `;
 
+const LargeCard = styled(Card)`
+  ${responsive.lage} {
+    width: 100%;
+  }
+
+  ${responsive.small} {
+    width: auto;
+    height: ${p => p.width || 'calc(50vh)'};
+  }
+`;
+
 const ZoomCard = ({ card, closeCard }) => {
+  const el = useRef();
+
+  useEffect(() => {
+    if (!el.current)
+      return;
+    window.scrollTo({
+      top: el.current.offsetTop,
+      behavior: 'smooth'
+    });
+  }, [card]);
+
   if (!card)
     return null;
 
   return (
-    <ZoomCardContainer>
+    <ZoomCardContainer ref={el}>
       <CloseButton onClick={closeCard} />
-      <Card card={card} width='100%' />
-      <ZoomCardInfo>{card.month}</ZoomCardInfo>
-      <ZoomCardInfo>{card.plant}</ZoomCardInfo>
-      <ZoomCardInfo>{card.type}</ZoomCardInfo>
-      <ZoomCardInfo>{card.names.join(', ')}</ZoomCardInfo>
+      <LargeCard card={card} />
+      <ZoomCardInfo>Month: {card.month}</ZoomCardInfo>
+      <ZoomCardInfo>Plant: {card.plant}</ZoomCardInfo>
+      <ZoomCardInfo>Type: {card.type}</ZoomCardInfo>
+      <ZoomCardInfo hidden={card.names.length === 0}>
+        Name{card.names.length === 1 ? "" : "s"}: {card.names.join(', ')}
+      </ZoomCardInfo>
     </ZoomCardContainer>
   );
 }
