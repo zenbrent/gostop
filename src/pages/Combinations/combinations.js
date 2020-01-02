@@ -54,7 +54,7 @@ export function Combinations () {
     <>
       <ComboControls>
         {combinations.map(({ name }) => (
-          <ComboLink href={`#${name}`}>{name}</ComboLink>
+          <ComboLink href={`#${name}`} key={name}>{name}</ComboLink>
         ))}
       </ComboControls>
 
@@ -79,10 +79,8 @@ export function Combinations () {
           ) (_pool);
 
           return (
-            <Combination>
-              <ComboTitle>
-                <a name={name}>{name}</a>
-              </ComboTitle>
+            <Combination key={name}>
+              <ComboTitle id={name}>{name}</ComboTitle>
               <ComboPoints>
                 {points.base} {points.base === 1 ? 'point' : 'points'} 
                 {!points.additionalAfter
@@ -132,9 +130,7 @@ export function Combinations () {
                     {sets.length > 1 && "Any one of these sets"}
                   </CardInstructions>
                   {map(set => (
-                    <div>
-                      <CombinationCards cards={set} />
-                    </div>
+                    <CombinationCards cards={set} key={map(cardKey, set).join(',')} />
                   )) (sets)}
                 </CardList>
               ))}

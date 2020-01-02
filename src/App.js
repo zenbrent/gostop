@@ -5,7 +5,8 @@ import { Combinations } from './pages/Combinations/combinations';
 import { CardList } from './pages/CardList/cardList';
 
 import {
-  BrowserRouter as Router,
+  HashRouter,
+  BrowserRouter,
   Switch,
   Route,
   Link
@@ -33,16 +34,16 @@ const Header = styled.div`
   align-self: center;
 `;
 
-const basename = window.location.host.endsWith('github.io')
-  ? '/gostop'
-  : '/';
+const Router = window.location.host.endsWith('github.io')
+  ? (props) => <HashRouter basename='/gostop' {...props} />
+  : BrowserRouter;
 
 function App() {
   const [filters, setFilters] = useState([]);
   const [organize, setOrganize] = useState("Month");
 
   return (
-    <Router basename={basename}>
+    <Router>
       <AppContainer>
         <Header>
           Go Stop
