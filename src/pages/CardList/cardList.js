@@ -17,9 +17,12 @@ const CardPage = styled.div`
   text-align: center;
 `;
 
-const CardGroup = styled.div`
+const CardGroupInline = styled.div`
   display: inline-block;
   margin-right: 1em;
+`;
+
+const CardGroupNewline = styled.div`
 `;
 
 const CardLabel = styled.div`
@@ -29,6 +32,10 @@ const CardLabel = styled.div`
 
 
 export function CardList ({ filters, setFilters, organize, setOrganize, zoomCard }) {
+  const CardGroup = organize === "Month"
+    ? CardGroupInline
+    : CardGroupNewline;
+
   return (
     <>
       <Controls>

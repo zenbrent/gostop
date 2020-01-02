@@ -16,7 +16,7 @@ import {
 
 const AppContainer = styled.div`
   display: grid;
-  @media (min-width: 376px) {
+  @media (min-width: 450px) {
     grid-template:
       [row1-start] ".        header header" 2rem [row1-end]
       [row2-start] "nav      page   page"   auto [row2-end]
@@ -26,15 +26,15 @@ const AppContainer = styled.div`
       / 15rem auto;
   }
 
-  @media (max-width: 375px) {
+  @media (max-width: 449px) {
     grid-template:
-      [row1-start] "header"   2rem [row1-end]
-      [row2-start] "nav "     auto [row2-end]
-      [row3-start] "controls" auto [row3-end]
-      [row3-start] "page"     auto [row3-end]
-      [row4-start] "zoom"     1fr  [row4-end]
-      [row5-start] "footer"   2em  [row5-end]
-      / 100%;
+      [row1-start] "header   header   header"   2rem [row1-end]
+      [row2-start] "nav      nav      nav "     auto [row2-end]
+      [row3-start] "controls controls controls" auto [row3-end]
+      [row5-start] ".        page     ."        auto [row5-end]
+      [row6-start] "footer   footer   footer"   2em  [row6-end]
+      [row4-start] "zoom     zoom     zoom"     1fr  [row4-end]
+      / 0.5rem auto 0.5rem;
   }
 `;
 
@@ -56,9 +56,10 @@ const Footer = styled.div`
   align-self: center;
 `;
 
-const ZoomCard = styled(Card)`
+const ZoomCard = styled(Card).attrs({
+  width: 'calc(100% - 2rem)'
+})`
   grid-area: zoom;
-  width: calc(100% - 2rem);
   margin: 0 auto;
 `;
 

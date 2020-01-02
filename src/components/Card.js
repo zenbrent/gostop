@@ -23,10 +23,10 @@ export const Card = styled.img.attrs(p => ({
   cursor: pointer;
 
   @media (min-width: 376px) {
-    width: calc(30px + 4vw);
+    width: ${p => p.width || 'calc(30px + 4vw)'};
   }
   @media (max-width: 375px) {
-    width: calc(20vw - 10px);
+    width: ${p => p.width || 'width: calc(20vw - 10px)'};
   }
 `;
 
