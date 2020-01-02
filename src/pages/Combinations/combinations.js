@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import { Card, cardKey } from '../../components/Card';
 
 import { combinations } from '../../Sets';
+import { SectionTitle, SectionSubtitle } from '../../Theme';
 
 const ComboPage = styled.div`
   grid-area: page;
@@ -37,15 +38,9 @@ const CardInstructions = styled.div`
   display: block;
 `;
 
-const ComboTitle = styled.div`
-  text-align: center;
-  font-weight: bold;
-`;
+const ComboTitle = SectionTitle;
 
-const ComboPoints = styled(ComboTitle)`
-  text-align: center;
-  color: deeppink;
-`;
+const ComboPoints = SectionSubtitle;
 
 export function Combinations ({ zoomCard }) {
   const CombinationCards = ({ cards }) => (
@@ -94,7 +89,7 @@ export function Combinations ({ zoomCard }) {
                     : (
                       ` after ${points.additionalAfter} cards, and an additional point per card after`
                     )
-                }.
+                }
               </ComboPoints>
               {notes &&
                 <div>

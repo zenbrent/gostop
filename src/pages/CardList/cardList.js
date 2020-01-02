@@ -4,7 +4,7 @@ import { mapObjIndexed, pipe, map, sort, filter, groupBy } from 'ramda';
 import { types, allCards, cardsByMonth } from '../../cards';
 
 import { Card, cardKey } from '../../components/Card';
-import { responsive } from '../../Theme';
+import { SectionTitle, SectionSubtitleInline, responsive } from '../../Theme';
 
 const Controls = styled.div`
   grid-area: controls;
@@ -25,15 +25,6 @@ const CardGroupInline = styled.div`
 
 const CardGroupNewline = styled.div`
 `;
-
-const CardLabel = styled.div`
-  display: block;
-  text-align: left;
-  ${responsive.small} {
-    text-align: center;
-  }
-`;
-
 
 export function CardList ({ filters, setFilters, organize, setOrganize, zoomCard }) {
   const CardGroup = organize === "Month"
@@ -146,19 +137,22 @@ const cardComparator = organize => (a, b) => {
 };
 
 const GroupLabel = ({ type,  group, count }) => {
-  const Contents = () => {
-    if (type === "Month") {
-      const month = cardsByMonth.find(c => c.month === group);
-      return <> {month.month}: <i>{month.plant}</i></>;
-    } else if (type === "Type") {
-      return <> {group} </>;
-    }
-  };
-
-  return (
-    <CardLabel>
-      <Contents /> ({count})
-    </CardLabel>
-  );
-}
+  if (type === "Month") {
+    const month = cardsByMonth.find(c => c.month === group);
+    return (
+      <> 
+        <SectionTitle>
+          {month.month}
+          <SectionSubtitleInline>{month.plant}</SectionSubtitleInline>
+        </SectionTitle>
+      </>
+    );
+  } else if (type === "Type") {
+    return (
+      <> 
+        <SectionTitle>{group}</SectionTitle>
+      </>
+    );
+  }
+};
 

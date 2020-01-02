@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { SectionTitle, SectionSubtitle } from '../../Theme';
 
 const Page = styled.div`
   grid-area: page;
@@ -40,9 +41,19 @@ const Strategy = ({ serve }) => {
   )
 }
 
+const Em = styled.em`
+  font-weight: bold;
+  font-style: initial;
+`;
+const If = styled.div`
+`;
+const Then = styled.div`
+`;
+
 export function Serving () {
   return (
     <Page>
+      <SectionTitle>Dealing</SectionTitle>
       {serves.map(serve => (
         <Serve key={serve.players}>
           <Players>For <Count>{serve.players}</Count> players:</Players>
@@ -51,6 +62,26 @@ export function Serving () {
           <Strategy serve={serve} />
         </Serve>
       ))}
+
+      <SectionTitle>Special conditions</SectionTitle>
+      <SectionSubtitle>Player hands</SectionSubtitle>
+      <Serve>
+        <If>If a player has <Em>an entire month</Em> (4 cards from the same set) in their hand,</If>
+        <Then>then <Em>that player wins</Em>.</Then>
+      </Serve>
+      <Serve>
+        <If>If everyone has <Em>an entire month</Em> in their hand,</If>
+        <Then>then the <Em>game is a draw</Em>.</Then>
+      </Serve>
+      <SectionSubtitle>Field layout</SectionSubtitle>
+      <Serve>
+        <If>If there is <Em>an entire month</Em> on the field,</If>
+        <Then>then the <Em>game is a draw</Em>.</Then>
+      </Serve>
+      <Serve>
+        <If>If there are <Em>3 cards from the same month</Em> on the field,</If>
+        <Then>then <Em>those cards are stacked</Em>, and will be taken with a match from the other card in the set.</Then>
+      </Serve>
     </Page>
   );
 };
@@ -61,3 +92,4 @@ const serves = [
   { players: 4, hand: 6,  field: 4 },
   { players: 5, hand: 5,  field: 3 },
 ];
+
