@@ -2,7 +2,7 @@
 
 Card sets & combinations
 
-[Deplyed to https://gostop.surge.sh/](https://gostop.surge.sh/)
+[https://zenbrent.github.io/gostop](https://zenbrent.github.io/gostop)
 
 # Technical
 
@@ -34,10 +34,6 @@ The build is minified and the filenames include the hashes.<br />
 Your app is ready to be deployed!
 
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run publish`
-
-Builds & deploys app. If you fork this, you can use [surge.sh](https://surge.sh/) by updating the domain in the `publish` script in `package.json`.
 
 ### `npm run eject`
 

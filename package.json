@@ -17,9 +17,9 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "postbuild": "mv ./build ./docs",
     "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "publish": "npm run build && npx surge ./build gostop.surge.sh"
+    "eject": "react-scripts eject"
   },
   "eslintConfig": {
     "extends": "react-app"
