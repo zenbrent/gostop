@@ -1,9 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
 import { mapObjIndexed, pipe, map, sort, filter, groupBy } from 'ramda';
-import { bright, animal, ribbon, junk, types, allCards, cardsByMonth, monthIndex, typeIndex } from '../../cards';
+import { types, allCards, cardsByMonth } from '../../cards';
 
 import { Card, cardKey } from '../../components/Card';
+import { responsive } from '../../Theme';
 
 const Controls = styled.div`
   grid-area: controls;
@@ -28,6 +29,9 @@ const CardGroupNewline = styled.div`
 const CardLabel = styled.div`
   display: block;
   text-align: left;
+  ${responsive.small} {
+    text-align: center;
+  }
 `;
 
 
@@ -76,7 +80,7 @@ const ControlGroup = styled.div`
 `;
 
 const Filters = ({ filters, setFilters }) => {
-  const isAll = filters.length === types.length;
+  const isAll = filters.length === Object.values(types).length;
   const isChecked = name => isAll || filters.includes(name);
   const change = name => e => {
     if (e.target.checked)
@@ -97,13 +101,13 @@ const Filters = ({ filters, setFilters }) => {
     <ControlGroup>
       Filter card types:
       <FilterLabel>
-        <input type="checkbox" checked={isAll} onChange={e => e.target.checked ? setFilters(types) : setFilters([bright])} />
+        <input type="checkbox" checked={isAll} onChange={e => e.target.checked ? setFilters(Object.values(types)) : setFilters([types.bright])} />
         All
       </FilterLabel>
-      <FilterInput prop={bright}>Bright</FilterInput>
-      <FilterInput prop={animal}>Animal</FilterInput>
-      <FilterInput prop={ribbon}>Ribbon</FilterInput>
-      <FilterInput prop={junk}>Junk</FilterInput>
+      <FilterInput prop={types.bright}>Bright</FilterInput>
+      <FilterInput prop={types.animal}>Animal</FilterInput>
+      <FilterInput prop={types.ribbon}>Ribbon</FilterInput>
+      <FilterInput prop={types.junk}>Junk</FilterInput>
     </ControlGroup>
   );
 };
@@ -131,23 +135,14 @@ const cardMatchesFilters = filters => card => {
   if (filters.length === 0)
     return true;
 
-  if (card.type === junk)
-    return filters.includes(junk);
-  else
-    return filters.includes(card.type);
+  return filters.includes(card.type);
 };
 
 const cardComparator = organize => (a, b) => {
-  let diff;
-
   if (organize === "Month")
-    diff = monthIndex(a) - monthIndex(b);
+    return a.monthIndex - b.monthIndex || a.sortIndex - b.sortIndex;
   else if (organize === "Type")
-    diff = typeIndex(a) - typeIndex(b);
-
-  return diff !== 0
-    ? diff
-    : a.index - b.index;
+    return a.typeIndex - b.typeIndex || a.sortIndex - b.sortIndex;
 };
 
 const GroupLabel = ({ type,  group, count }) => {

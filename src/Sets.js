@@ -2,9 +2,12 @@ import { any, none, all } from 'ramda';
 
 import {
   specialCards,
+  specialCardNames as s,
   cardsByType
 } from './cards';
 
+// Change so it returns object:
+// { matches: Bool, matching: Set, remaining: Set }
 export const matchesCombination = combination => cards => {
   const {
     name,
@@ -53,25 +56,25 @@ export const combinations = [
     points: { base: 4 },
     count: 4,
     pool: cardsByType.bright,
-    requires: [specialCards.rainMan]
+    requires: specialCards[s.rainMan]
   }, {
     name: "Dry 4 Brights",
     points: { base: 5 },
     count: 4,
     pool: cardsByType.bright,
-    excludes: [specialCards.rainMan]
+    excludes: specialCards[s.rainMan]
   }, {
     name: "Wet 3 Brights",
     points: { base: 2 },
     count: 3,
     pool: cardsByType.bright,
-    requires: [specialCards.rainMan]
+    requires: specialCards[s.rainMan]
   }, {
     name: "Dry 3 Brights",
     points: { base: 3 },
     count: 3,
     pool: cardsByType.bright,
-    excludes: [specialCards.rainMan]
+    excludes: specialCards[s.rainMan]
   },
 
   // Animals
@@ -83,7 +86,7 @@ export const combinations = [
   }, {
     name: "Godori",
     points: { base: 3 },
-    sets: [[specialCards.geese, specialCards.cuckoo, specialCards.nightingale]]
+    sets: [specialCards[s.godori]]
   },
 
   // Ribbons
@@ -98,7 +101,7 @@ export const combinations = [
     notes:
 `This doesn't include the "rain ribbon" in December.
 Also note -- "Freedom of choice" principle: 2 ribbon triplets can count as 3 matching ribbons twice, plus 5 ribbons + 1, for 8 points.`,
-    sets: [specialCards.poetryRibbons, specialCards.purpleRibbons, specialCards.dryRibbons]
+    sets: [specialCards[s.poetryRibbon], specialCards[s.purpleRibbon], specialCards[s.dryRibbon]]
   },
 
   // Junk
@@ -112,6 +115,6 @@ Also note -- "Freedom of choice" principle: 2 ribbon triplets can count as 3 mat
     name: "Special Junk",
     notes: "These cards count as 2 junks. The Sake card may be one Animal card XOR 2 junk cards. sang-pi in Korean.",
     points: { base: 2 },
-    sets: [[specialCards.sake], [specialCards.lightning], [specialCards.paulownia]]
+    pool: specialCards[s.specialJunk]
   }
 ];

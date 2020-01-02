@@ -26,6 +26,10 @@ const Combination = styled.div`
 
 const CardList = styled.div`
   display: inline-block;
+`;
+
+const CardGroup = styled.div`
+  display: inline-block;
   padding-right: 1rem;
 `;
 
@@ -45,9 +49,11 @@ const ComboPoints = styled(ComboTitle)`
 
 export function Combinations ({ zoomCard }) {
   const CombinationCards = ({ cards }) => (
-    cards.map(card =>
-      <Card card={card} key={cardKey(card)} onClick={() => zoomCard(card)} />
-    )
+    <CardGroup>
+      {cards.map(card =>
+        <Card card={card} key={cardKey(card)} onClick={() => zoomCard(card)} />
+      )}
+    </CardGroup>
   );
 
   return (

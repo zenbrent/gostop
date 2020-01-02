@@ -5,6 +5,7 @@ import { Combinations } from './pages/Combinations/combinations';
 import { CardList } from './pages/CardList/cardList';
 import { Licenses } from './pages/Licensing/licensing';
 import { Card } from './components/Card';
+import { responsive } from './Theme';
 
 import {
   HashRouter,
@@ -16,7 +17,7 @@ import {
 
 const AppContainer = styled.div`
   display: grid;
-  @media (min-width: 450px) {
+  ${responsive.lage} {
     grid-template:
       [row1-start] ".        header header" 2rem [row1-end]
       [row2-start] "nav      page   page"   auto [row2-end]
@@ -26,7 +27,8 @@ const AppContainer = styled.div`
       / 15rem auto;
   }
 
-  @media (max-width: 449px) {
+  ${responsive.small} {
+   {
     grid-template:
       [row1-start] "header   header   header"   2rem [row1-end]
       [row2-start] "nav      nav      nav "     auto [row2-end]
@@ -93,6 +95,7 @@ const ZoomCard = ({ card, closeCard }) => {
       <ZoomCardInfo>{card.month}</ZoomCardInfo>
       <ZoomCardInfo>{card.plant}</ZoomCardInfo>
       <ZoomCardInfo>{card.type}</ZoomCardInfo>
+      <ZoomCardInfo>{card.names.join(', ')}</ZoomCardInfo>
     </ZoomCardContainer>
   );
 }

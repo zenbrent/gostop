@@ -1,14 +1,13 @@
 import styled from 'styled-components';
 import './Card.css';
-
-import { monthIndex, } from '../cards';
+import { responsive } from '../Theme';
 
 // from http://png-pixel.com/
 const transparentPng100x164 =
   "data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAACkCAQAAADLA0NrAAAAmUlEQVR42u3PAQEAAAgCoPx/uh8KD8iViIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIyHbkAQJkAKVTKMc5AAAAAElFTkSuQmCC";
 
 export const Card = styled.img.attrs(p => ({
-  className: `Card-image-${monthIndex(p.card)}-${p.card.index}`,
+  className: `Card-image-${p.card.monthIndex}-${p.card.index}`,
   src: transparentPng100x164
 }))`
   display: inline-block;
@@ -22,11 +21,12 @@ export const Card = styled.img.attrs(p => ({
 
   cursor: ${p => p.onClick ? 'pointer' : 'default'};
 
-  @media (min-width: 376px) {
+  ${responsive.lage} {
     width: ${p => p.width || 'calc(30px + 4vw)'};
   }
-  @media (max-width: 375px) {
-    width: ${p => p.width || 'width: calc(20vw - 10px)'};
+
+  ${responsive.small} {
+    width: ${p => p.width || 'calc(25vw - 10px)'};
   }
 `;
 
