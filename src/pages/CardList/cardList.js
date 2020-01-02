@@ -28,7 +28,7 @@ const CardLabel = styled.div`
 `;
 
 
-export function CardList ({ filters, setFilters, organize, setOrganize }) {
+export function CardList ({ filters, setFilters, organize, setOrganize, zoomCard }) {
   return (
     <>
       <Controls>
@@ -43,7 +43,7 @@ export function CardList ({ filters, setFilters, organize, setOrganize }) {
           groupBy(card => card[organize.toLowerCase()]),
 
           map(map(card => (
-            <Card card={card} key={cardKey(card)} />
+            <Card card={card} key={cardKey(card)} onClick={() => zoomCard(card)} />
           ))),
 
           mapObjIndexed((cards, group) => (

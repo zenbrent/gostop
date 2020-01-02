@@ -29,12 +29,6 @@ const CardList = styled.div`
   padding-right: 1rem;
 `;
 
-const CombinationCards = ({ cards }) => (
-  cards.map(card =>
-    <Card card={card} key={cardKey(card)} />
-  )
-);
-
 const CardInstructions = styled.div`
   display: block;
 `;
@@ -49,7 +43,13 @@ const ComboPoints = styled(ComboTitle)`
   color: deeppink;
 `;
 
-export function Combinations () {
+export function Combinations ({ zoomCard }) {
+  const CombinationCards = ({ cards }) => (
+    cards.map(card =>
+      <Card card={card} key={cardKey(card)} onClick={() => zoomCard(card)} />
+    )
+  );
+
   return (
     <>
       <ComboControls>

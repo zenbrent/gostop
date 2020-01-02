@@ -3,9 +3,13 @@ import './Card.css';
 
 import { monthIndex, } from '../cards';
 
+// from http://png-pixel.com/
+const transparentPng100x164 =
+  "data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAACkCAQAAADLA0NrAAAAmUlEQVR42u3PAQEAAAgCoPx/uh8KD8iViIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIyHbkAQJkAKVTKMc5AAAAAElFTkSuQmCC";
+
 export const Card = styled.img.attrs(p => ({
   className: `Card-image-${monthIndex(p.card)}-${p.card.index}`,
-  src: "data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAACkCAQAAADLA0NrAAAAmUlEQVR42u3PAQEAAAgCoPx/uh8KD8iViIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIyHbkAQJkAKVTKMc5AAAAAElFTkSuQmCC"
+  src: transparentPng100x164
 }))`
   display: inline-block;
   position: relative;
@@ -16,30 +20,13 @@ export const Card = styled.img.attrs(p => ({
   background-size: cover;
   border-radius: 3px;
 
-  width: calc(30px + 4vw);
-  height: calc((30px + 4vw) * 1.64);
+  cursor: pointer;
 
-  background-image: url("./cards/${p => monthIndex(p.card)}/${p => p.card.index}.png"); 
-
-  &:hover:before {
-    background-image: url("./cards/${p => monthIndex(p.card)}/${p => p.card.index}.png"); 
-    position: absolute;
-    content: ' ';
-    top: -50%;
-    right: -50%;
-    bottom: -50%;
-    left: -50%;
-    z-index: 1;
-    box-shadow: rgba(100, 100, 100, 0.5) 3px 3px 15px 1px;
-    cursor: pointer;
-
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: cover;
-    border-radius: 3px;
-
-    background-image: url("./cards/${p => monthIndex(p.card)}/${p => p.card.index}.png"); 
-
+  @media (min-width: 376px) {
+    width: calc(30px + 4vw);
+  }
+  @media (max-width: 375px) {
+    width: calc(20vw - 10px);
   }
 `;
 
