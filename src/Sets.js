@@ -110,7 +110,7 @@ Also note -- "Freedom of choice" principle: 2 ribbon triplets can count as 3 mat
     pool: cardsByType.junk,
   }, {
     name: "Special Junk",
-    nots: "These cards count as 2 junks. The Sake card may be one Animal card XOR 2 junk cards. sang-pi in Korean.",
+    notes: "These cards count as 2 junks. The Sake card may be one Animal card XOR 2 junk cards. sang-pi in Korean.",
     points: { base: 2 },
     sets: [[specialCards.sake], [specialCards.lightning], [specialCards.paulownia]]
   }

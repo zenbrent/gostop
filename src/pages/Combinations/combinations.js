@@ -11,9 +11,12 @@ const ComboPage = styled.div`
 `;
 
 const Combination = styled.div`
+  padding-bottom: 1rem;
+`;
+
+const CardList = styled.div`
   display: inline-block;
-  padding: 0 1em;
-  border: solid hotpink 1px;
+  padding-right: 1rem;
 `;
 
 const CombinationCards = ({ cards }) => (
@@ -27,8 +30,13 @@ const CardInstructions = styled.div`
 `;
 
 const ComboTitle = styled.div`
-  margin-top: 1em;
+  text-align: center;
   font-weight: bold;
+`;
+
+const ComboPoints = styled(ComboTitle)`
+  text-align: center;
+  color: deeppink;
 `;
 
 export function Combinations () {
@@ -43,7 +51,8 @@ export function Combinations () {
           requires = [],
           excludes = [],
           sets = [],
-          notes
+          notes,
+          points
         } = combination;
 
         const pool = pipe(
@@ -53,57 +62,66 @@ export function Combinations () {
         ) (_pool);
 
         return (
-          <div>
+          <Combination>
             <ComboTitle>
               {name}
             </ComboTitle>
+            <ComboPoints>
+              {points.base} {points.base === 1 ? 'point' : 'points'} 
+              {!points.additionalAfter
+                  ? ''
+                  : (
+                    ` after ${points.additionalAfter} cards, and an additional point per card after`
+                  )
+              }.
+            </ComboPoints>
             {notes &&
               <div>
                 Note: {notes}
               </div>
             }
             {when(requires, () => (
-              <Combination>
+              <CardList>
                 <CardInstructions>
-                  the following cards
+                  {requires.length === 1 ? "this card" : "the following cards"}
                 </CardInstructions>
                 <CombinationCards cards={requires} />
-              </Combination>
+              </CardList>
             ))}
             {when(pool, () => (
-              <Combination>
+              <CardList>
                 <CardInstructions>
                   {when(requires, () => "and")}
                   {!min && !!pool.length && count && (count < pool.length + requires.length
-                    ? ` any ${count - requires.length} of the following cards: `
-                    : " all of the following cards: ")}
-                  {pool && min && ` at least ${min} of the following cards: `}
+                    ? `any ${count - requires.length} of the following cards`
+                    : "all of the following cards")}
+                  {pool && min && `at least ${min} of the following cards`}
                 </CardInstructions>
                 <CombinationCards cards={pool.filter(c => !excludes.includes(c))} />
-              </Combination>
+              </CardList>
             ))}
             {when(excludes, () => (
-              <Combination>
+              <CardList>
                 <CardInstructions>
                   not
                 </CardInstructions>
                 <CombinationCards cards={excludes} />
-              </Combination>
+              </CardList>
             ))}
             {when(sets, () => (
-              <Combination>
+              <CardList>
                 <CardInstructions>
-                  {sets.length === 1 && "All cards in this set:"}
-                  {sets.length > 1 && "Any one of these sets:"}
+                  {sets.length === 1 && "All cards in this set"}
+                  {sets.length > 1 && "Any one of these sets"}
                 </CardInstructions>
                 {map(set => (
                   <div>
                     <CombinationCards cards={set} />
                   </div>
                 )) (sets)}
-              </Combination>
+              </CardList>
             ))}
-          </div>
+          </Combination>
         );
       })}
     </ComboPage>
