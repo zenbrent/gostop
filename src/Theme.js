@@ -34,9 +34,13 @@ export const SectionSubtitleInline = styled.span`
   margin-left: 0.5rem;
 `;
 
+const smallPx = 449;
+
 export const responsive = {
-  small: '@media (max-width: 449px)',
-  large: '@media (min-width: 450px)'
+  smallPx,
+  largePx: smallPx + 1,
+  small: `@media (max-width: ${smallPx}px)`,
+  large: `@media (min-width: ${smallPx + 1}px)`
 };
 
 const hidden = css`

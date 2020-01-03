@@ -1,10 +1,14 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useReducer, useRef, useEffect } from 'react';
 import styled from 'styled-components';
+import { mapObjIndexed } from 'ramda';
 
+import { IfEnabled, isEnabled } from './config/flags';
+import { NotFound } from './pages/404/err';
 import { Combinations } from './pages/Combinations/combinations';
 import { CardList } from './pages/CardList/cardList';
 import { Licenses } from './pages/Licensing/licensing';
 import { Serving } from './pages/Serving/serving';
+import { Chips } from './pages/Chips/chips';
 import { Card } from './components/Card';
 import { responsive, hideable } from './Theme';
 
@@ -105,8 +109,9 @@ const ZoomCard = ({ card, closeCard }) => {
   const el = useRef();
 
   useEffect(() => {
-    if (!el.current)
+    if (!el.current || window.innerWidth >= responsive.largePx)
       return;
+
     window.scrollTo({
       top: el.current.offsetTop,
       behavior: 'smooth'
@@ -140,10 +145,39 @@ const Router = window.location.host.endsWith('github.io')
 //   }
 // `;
 
+const initState = {
+  filters: [],
+  organize: "Month",
+  zoomedCard: undefined
+};
+
+const reducer = (state, action) => {
+  switch (action.type) {
+    case "setFilters":  return { ...state, filters: action.value };
+    case "setOrganize": return { ...state, organize: action.value };
+    case "zoomCard":    return { ...state, zoomedCard: action.value };
+    default:
+      console.error({ action, state });
+      throw new Error(`${action.type} is not supported.`);
+  }
+};
+
+const actions = {
+  setFilters: dispatch => value => dispatch({ type: "setFilters", value }),
+  setOrganize: dispatch => value => dispatch({ type: "setOrganize", value }),
+  zoomCard: dispatch => value => dispatch({ type: "zoomCard", value })
+};
+
 function App() {
-  const [filters, setFilters] = useState([]);
-  const [organize, setOrganize] = useState("Month");
-  const [zoomedCard, zoomCard] = useState();
+  const [state, dispatch] = useReducer(reducer, initState);
+
+  const routes = [
+    { path: "/chips", enabled: isEnabled('chips'), component: Chips },
+    { path: "/serving", component: Serving },
+    { path: "/combinations", component: () => <Combinations zoomCard={actions.zoomCard(dispatch)} /> },
+    { path: "/licenses", enabled: isEnabled('licenses'), component: Licenses },
+    { path: "/", exact: true, component: () => <CardList {...state} {...mapObjIndexed(a => a(dispatch), actions)} /> }
+  ];
 
   return (
     <Router>
@@ -156,24 +190,21 @@ function App() {
           <NavLink to="/">Cards</NavLink>
           <NavLink to="/combinations">Combinations</NavLink>
           <NavLink to="/serving">Serving</NavLink>
+          <IfEnabled flag="chips">
+            <NavLink to="/chips">Chips</NavLink>
+          </IfEnabled>
         </Links>
 
         <Switch>
-          <Route path="/serving">
-            <Serving />
-          </Route>
-          <Route path="/combinations">
-            <Combinations zoomCard={zoomCard} />
-          </Route>
-          <Route path="/licenses">
-            <Licenses />
-          </Route>
-          <Route path="/">
-            <CardList {...{ filters, setFilters, organize, setOrganize, zoomCard }} />
+          {routes
+            .filter(route => route.enabled !== false)
+            .map((route, i) => <Route key={i} {...route} />)}
+          <Route path="*">
+            <NotFound />
           </Route>
         </Switch>
 
-        <ZoomCard card={zoomedCard} closeCard={() => zoomCard()} />
+        <ZoomCard card={state.zoomedCard} closeCard={() => actions.zoomCard(dispatch)()} />
 
         <Footer />
       </AppContainer>
